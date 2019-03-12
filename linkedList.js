@@ -17,11 +17,12 @@ class Node {
     this.next = null;
   }
 }
-class LinkedList {
+class doubleLinkedList {
   constructor(value) {
     this.head = {
       value: value,
-      next: null
+      next: null,
+      prev: null
     };
     this.tail = this.head;
     this.length = 1;
@@ -29,8 +30,10 @@ class LinkedList {
 
   append(value) {
     const newNode = new Node(value);
+
     this.tail.next = newNode;
     this.tail = newNode;
+    this.prev = this.tail;
     this.length++;
     return this;
   }
@@ -38,10 +41,12 @@ class LinkedList {
   prepend(value) {
     const newNode = {
       value: value,
-      next: null
+      next: null,
+      prev: null
     };
     newNode.next = this.head;
     this.head = newNode;
+    this.head.prev = newNode;
     this.length++;
     return this;
   }
@@ -73,6 +78,9 @@ class LinkedList {
 
     leadNode.next = newNode;
     newNode.next = nextPointer;
+    newNode.prev = leadNode;
+    nextPointer.prev = newNode;
+
     this.length++;
     console.log(this.printList());
   }
@@ -95,13 +103,34 @@ class LinkedList {
     this.length--;
     console.log(this.printList());
   }
+
+  reverse() {
+    if (!this.head.next) {
+      return this.head;
+    }
+
+    let first = this.head;
+    this.tail = this.head;
+    let second = first.next;
+
+    while (second) {
+      const temp = second.next;
+      second.next = first;
+      first = second;
+      second = temp;
+    }
+    this.head.next = null;
+    this.head = first;
+    return this;
+  }
 }
 
-const myLinkedList = new LinkedList(10);
+const myLinkedList = new doubleLinkedList(10);
 myLinkedList.append(5);
 myLinkedList.append(16);
 myLinkedList.prepend(1);
 myLinkedList.insert(2, 99);
 myLinkedList.insert(20, 88);
-myLinkedList.remove(2);
+// myLinkedList.remove(2);
+myLinkedList.reverse();
 console.log(myLinkedList.printList());
